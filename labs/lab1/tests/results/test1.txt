@@ -1,0 +1,1 @@
+Enter a value > Enter a value > The result is 0.00

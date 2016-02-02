@@ -30,3 +30,10 @@
 
 # Debug files
 *.dSYM/
+
+
+# Files specific to this script
+/.lab[0-9]/
+/lab[0-9].tar.gz
+/lab[0-9]_results/
+
