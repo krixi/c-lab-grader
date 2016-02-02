@@ -12,6 +12,8 @@ usage()
     echo "Options:"
     echo "  -u  =   Update this script"
     echo "  -f  =   Fetch the latest lab materials for the given lab"
+    echo "  -p  =   Print output"
+    echo "  -k  =   Keep output log, even if execution is perfect"
     # Hidden options, since they won't really need to be changed...
     #echo "  -a  =   Set the archive URL"
     #echo "  -s  =   Set the script URL"
@@ -20,15 +22,19 @@ usage()
 
 # Initialize defaults
 archive_url="http://www.cs.montana.edu/~marissa.joehler/csci-112-labs"
-script_url=""
+script_url="https://raw.githubusercontent.com/krixi/c-lab-grader/master/grade"
 update_self=0
 update_lab=0
-while getopts "a:s:uf?" option; do
+print_output=0
+keep_output=0
+while getopts "a:s:ufpk?" option; do
     case $option in
         a) archive_url=$OPTARG ;;
         s) script_url=$OPTARG ;;
         u) update_self=1 ;;
         f) update_lab=1 ;;
+        p) print_output=1 ;;
+        k) keep_output=1 ;;
         \?) usage ;;
     esac
 done
@@ -71,6 +77,23 @@ echo "Input:        $input"
 echo "Output:       $out_dir"
 echo ""
 
+# Make sure the assignment name is reasonable.
+[[ $assignment =~ ^[a-z]{3,}[0-9]$ ]] || assignment=""
+if [ -z "$assignment" ]; then
+    echo "ERROR: Invalid assignment name"
+    exit 1
+fi
+
+# Check if we have a file or a folder to test
+if [ -d "$input" ]; then
+    files="${input}/*.c"
+elif [ -f "$input" ]; then
+    files="$input"
+else
+    echo "ERROR: $input is not a file or folder"
+    exit 1
+fi
+
 # Check if we should overwrite the output folder. 
 if [ -d "$out_dir" ]; then
     read -p "Output folder already exists. Overwrite? (y/n) " -n 1 -r
@@ -83,17 +106,10 @@ if [ -d "$out_dir" ]; then
     fi
 fi
 
-
-# Check if we have a file or a folder to test
-if [ -d "$input" ]; then
-    files="${input}/*.c"
-elif [ -f "$input" ]; then
-    files="$input"
-else
-    echo "ERROR: $input is not a file or folder"
-    exit 1
+if [ $update_lab -eq 1 -a -d "$tmp_dir" ]; then
+    echo "Updating lab materials, removing: $tmp_dir"
+    rm -rf "$tmp_dir"
 fi
-
 
 # Check if we have the files necessary to test this assignment. 
 # 1) Check for a folder with the assignment name
@@ -155,8 +171,6 @@ mkdir "$out_dir"
 # Convert scores filename to absolute
 scores_csv=`readlink -f "$scores_csv"`
 
-echo "scores_csv = $scores_csv"
-
 # Assemble a scoresheet .csv file: 
 # <last name>, <first name>, <compile score>, <run score>, <output score>, <comment score>
 # <compile score> = 2 if compiles with no errors or warnings, 1 if warnings, 0 if errors. 
@@ -170,20 +184,34 @@ for file in $files
 do
     name=`basename $file | sed 's/\(.*\)\.c/\1/'`
     echo "[$name]"
+    out_file="$out_dir/${name}.out"
     fullname=`readlink -f "$file"`
-    echo "      ${tmp_dir}/${grade_script} $fullname $scores_csv"
-    "${tmp_dir}/${grade_script}" $fullname $scores_csv 
+    
+    # Call the lab-specific grading script. 
+    "${tmp_dir}/${grade_script}" $fullname $scores_csv > "$out_file" 2>&1
     rv=$?
-    if [ $rv -ne 0 ]; then
-        echo
-        echo "WARNING: There was a problem running the command:"
-        echo "      ${tmp_dir}/${grade_script} $fullname $scores_csv"
-        echo
+    
+    # print out output if that is enabled
+    if [ $print_output -eq 1 ]; then
+        cat "$out_file"
     fi
+
+    # Remove the log file if that's enabled
+    if [ $rv -eq 0 ]; then
+        echo "No errors detected!"
+        if [ $keep_output -eq 0 ]; then
+            echo "Deleting output file: $out_file"
+            rm "$out_file"
+        fi
+    else
+        echo "Errors were encountered"
+    fi
+
 done
 
-
-echo "Scores saved to: $scores_csv"
-echo ""
+echo "Scores:"
+echo "-------------------------------------------------------------------------"
+cat "$scores_csv"
+echo "-------------------------------------------------------------------------"
 echo "All done!"
 exit 0
