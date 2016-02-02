@@ -1,149 +1,143 @@
 #!/bin/bash
+# Marissa Joehler
+# CSCI 112 - shell script to grade lab1
+# 2/1/2016
 
-echo "CSCI 112 - Grade"
-echo ""
+# Specific values for this lab:
+assignment="lab1"
+CC=c99
+CFLAGS=-Wall
+tests_dir="tests"
+comment_weight=4.5
+create_tests=0
 
-# This is an automatic grading script for this course. 
 usage()
 {
-    echo "Usage: `basename $0` <assignment name> <tests folder> <input folder> "
-    exit 1;
+    echo "Usage: `basename $0` <file to test> <scores.csv>"
+    exit 1; 
 }
 
-# make sure we have enough parameters. 
-if [ $# -lt 3 ]; then
+# Make sure we have the parameters:
+# $1 = The path to the file to test
+# $2 = The path to the scores.csv file to update.
+if [ $# -lt 2 ]; then
+    echo "ERROR: Not enough parameters"
     usage
 fi
 
-# Get the input 
-assignment=$1
-tests_dir=$2
-input_dir=$3
-out_dir="${assignment}_results"
-scores_csv="$out_dir/scores.csv"
-echo "Assignment:   $assignment"
-echo "Tests:        $tests_dir"
-echo "Input Folder: $input_dir"
-echo "Output:       $out_dir"
-echo ""
+inputfile=$1
+if [ \! -f "$inputfile" ]; then
+    echo "ERROR: Cannot find file: $inputfile"
+    exit 1
+fi
+scores_csv=$2
+if [ \! -f "$scores_csv" ]; then
+    echo "ERROR: Cannot find file: $scores_csv"
+    exit 1
+fi
 
-if [ -d "$out_dir" ]; then
-    read -p "Output folder already exists. Overwrite? (y/n) " -n 1 -r
-    echo 
-    if [[ $REPLY =~ ^[Yy]$ ]]
-    then
-        rm -rf "$out_dir"
+# This is the current directory
+cur_dir="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )" 
+echo "cur_dir = $cur_dir"
+tests_dir="${cur_dir}/${tests_dir}";
+
+
+
+#  last_name,first_name,compile_score,run_score,output_score,comment_score  >> "$scores_csv"
+
+# make sure it follows the naming convention - extract everything between the underscores, convert to array
+names=`echo $(basename "$inputfile") | sed 's/\(.*\)_\(.*\)_\(.*\)\.c/\1 \2 \3/'`
+names=($names)
+names_len=${#names[@]}
+lab_name=""
+student_name=""
+for ((i=0; i<${names_len}; i++ )); do
+    if [ $((i+1)) -eq $names_len ]; then
+        lab_name=${names[$i]}
     else
-        exit 1
+        student_name="$student_name ${names[$i]}"
     fi
-fi
+done
+echo "Name = $student_name"
 
-# Create the directory for the output
-mkdir "$out_dir"
-
-# make sure the folders exist. 
-if [ \! -d "$tests_dir" ]; then
-    echo "ERROR: Cannot find tests folder: $tests_dir"
-    exit 1;
-fi
-if [ \! -d "$input_dir" ]; then
-    echo "ERROR: Cannot find input folder: $input_dir"
-    exit 1;
+if [ "$lab_name" != "$assignment" ]; then
+    echo "WARNING: assignment name does not match!"
+    echo "Skipping $inputfile ..."
+    echo ""
+    exit 1
 fi
 
 
-echo "Running tests..."
-# For each file in the input folder:
-# It should have a name in this format:
-# last_first_assignment.c
-# Assemble a scoresheet .csv file: 
-# <last name>, <first name>, <compile score>, <run score>, <output score>, <comment score>
-# <compile score> = 2 if compiles with no errors or warnings, 1 if warnings, 0 if errors. 
-# <run score> = 2 if runs and exits with no error, 1 if exits with error, 0 if does not run
-# <output score> = 2 if the output matches, 1 if formatting is off but values are there, 0 if values are off. 
-echo "last_name,first_name,compile_score,run_score,output_score,comment_score" >> "$scores_csv"
-for inputfile in  "$input_dir"/*.c
+# print put the filename
+echo "[`basename $inputfile`]"
+
+# reset the scores
+compile_score=2
+run_score=0
+output_score=0
+comment_score=0
+prog="${assignment}_prog"
+
+# compile it
+${CC} ${CFLAGS} "$inputfile" -o "$prog" 2> "$assignment.err" > "$assignment.out"
+rv=$?
+
+# Check for compiler errors and warmings. 
+if [ $rv -ne 0 ]; then
+    echo "Detected compiler error:" 
+    cat "$assignment.err" "$assignment.out" 
+    echo 
+    compile_score=0
+elif [ -s "$assignment.err" ]; then
+    echo "Detected compiler warning:" 
+    cat "$assignment.err" "$assignment.out" 
+    echo 
+    compile_score=1
+fi
+
+out_ok=0
+runs_ok=0
+total_runs=0
+# Run it though all of the tests in the test directory. 
+# the way these work is that each .txt file in the test directory is a set of sample input
+# We should just be able to pipe the file to the program 
+for testfile in "$tests_dir"/*.txt
 do
-    # make sure it follows the naming convention
-    lab_name=`echo $(basename "$inputfile") | sed 's/\(.*\)_\(.*\)_\(.*\)\.c/\3/'`
+    ((total_runs++))
+    echo 
+    echo "[$total_runs: `basename $testfile`]" 
 
-    if [ "$lab_name" != "$assignment" ]; then
-        echo "WARNING: assignment name does not match!"
-        echo "Skipping $inputfile ..."
-        echo ""
-        continue
-    fi
-   
-    # Get the last and first name
-    last_name=`echo $(basename "$inputfile") | sed 's/\(.*\)_\(.*\)_\(.*\)\.c/\1/'`
-    first_name=`echo $(basename "$inputfile") | sed 's/\(.*\)_\(.*\)_\(.*\)\.c/\2/'`
-    user_out="$out_dir/${last_name}_${first_name}.log"
-    
-    # print put the filename
-    echo "[$inputfile]"
-    echo "[`basename $inputfile`]" >> "$user_out"
-
-    # reset the scores
-    compile_score=2
-    run_score=0
-    output_score=0
-    comment_score=0
-    prog="${assignment}_prog"
-
-    # compile it
-    gcc -Wall "$inputfile" -o "$prog" 2> "$assignment.err" > "$assignment.out"
+    # Run it
+    ./"$prog" < $testfile > "$assignment.out" 2> "$assignment.err"
     rv=$?
-    
-    # Check for compiler errors and warmings. 
+
+    cat "$assignment.out"
+
     if [ $rv -ne 0 ]; then
-        echo "Detected compiler error:" >> "$user_out"
-        cat "$assignment.err" "$assignment.out" >> "$user_out"
-        echo >> "$user_out"
-        compile_score=0
+        echo "Detected runtime error:" 
+        cat "$assignment.err" 
+        echo 
     elif [ -s "$assignment.err" ]; then
-        echo "Detected compiler warning:" >> "$user_out"
-        cat "$assignment.err" "$assignment.out" >> "$user_out"
-        echo >> "$user_out"
-        compile_score=1
+        echo "Detected runtime warning:" 
+        cat "$assignment.err" 
+        echo 
+    else
+        ((runs_ok++))
     fi
 
-    out_ok=0
-    runs_ok=0
-    total_runs=0
-    # Run it though all of the tests in the test directory. 
-    # the way these work is that each .txt file in the test directory is a set of sample input
-    # We should just be able to pipe the file to the program 
-    for testfile in "$tests_dir"/*.txt
-    do
-        ((total_runs++))
-        echo "  [$total_runs: $testfile]" >> "$user_out"
-        
 
-        # Run it
-        ./"$prog" < $testfile > "$assignment.out" 2> "$assignment.err"
-        rv=$?
+    result_file="`dirname $testfile`/results"
+    if [ \! -d "$result_file" ]; then
+        mkdir "$result_file"
+    fi
+    result_file="$result_file/`basename $testfile`"
+    if [ \! -f "$result_file" ]; then
+        echo "Result file does not exist:"
+        echo "  $result_file"
 
-        if [ $rv -ne 0 ]; then
-            echo "Detected runtime error:" >> "$user_out"
-            cat "$assignment.err" >> "$user_out"
-            echo >> "$user_out"
-        elif [ -s "$assignment.err" ]; then
-            echo "Detected runtime warning:" >> "$user_out"
-            cat "$assignment.err" >> "$user_out"
-            echo >> "$user_out"
-        else
-            ((runs_ok++))
-        fi
-
-
-        result_file="`dirname $testfile`/results"
-        if [ \! -d "$result_file" ]; then
-            mkdir "$result_file"
-        fi
-        result_file="$result_file/`basename $testfile`"
-        if [ \! -f "$result_file" ]; then
-            echo "Result file does not exist:"
-            echo "  $result_file"
+        if [ $create_tests -ne 1 ]; then
+            exit 1
+        else 
             echo
             cat "$assignment.out"
             echo
@@ -154,47 +148,42 @@ do
                 cp "$assignment.out" "$result_file"
             fi
         fi
-
-        # Make sure the output is what is expected
-        diff -ud "$result_file" "$assignment.out" > "$assignment.err" 2>/dev/null
-        rv=$?
-        if [ $rv -ne 0 ]; then
-            echo "Detected diff error:" >> "$user_out"
-            cat "$assignment.err" >> "$user_out"
-            echo >> "$user_out"
-        elif [ -s "$assignment.err" ]; then
-            echo "Detected output difference:" >> "$user_out"
-            cat "$assignment.err" >> "$user_out"
-            echo >> "$user_out"
-        else
-            ((out_ok++))
-        fi
-
-    done
-    
-    run_score=$( awk "BEGIN {printf \"%.2f\", ${runs_ok}/${total_runs} * 2; exit(0)}")
-    output_score=$( awk "BEGIN {printf \"%.2f\", ${out_ok}/${total_runs} * 2; exit(0)}")
-    compile_score=$( awk "BEGIN {printf \"%.2f\", ${compile_score}; exit(0)}")
-
-    # Check for comments. 
-    comment_count=`( grep "/\*" $inputfile; grep "//" $inputfile; ) | cat | wc -l`
-    line_count=`cat $inputfile | wc -l`
-    comment_score=$( awk "BEGIN {printf \"%.2f\", (4.2 * ${comment_count})/${line_count} * 2; exit(0)}")
-    
-    echo "  $last_name, $first_name:    compile = $compile_score,   run = $run_score ($runs_ok/$total_runs),    output = $output_score ($out_ok/$total_runs),   comments = $comment_score"
-    
-    # Write it out to a csv file
-    echo "$last_name,$first_name,$compile_score,$run_score,$output_score,$comment_score" >> "$scores_csv"
-
-    # clean up
-    rm "$prog" "$assignment.err" "$assignment.out"
-    if [ $compile_score == "2.00" -a $runs_ok -eq $total_runs -a $out_ok -eq $total_runs ]; then
-        rm "$user_out"
     fi
-    echo
+
+    # Make sure the output is what is expected
+    diff -ud "$result_file" "$assignment.out" > "$assignment.err" 2>/dev/null
+    rv=$?
+    if [ $rv -ne 0 ]; then
+        echo "Detected diff error:" 
+        cat "$assignment.err" 
+        echo 
+    elif [ -s "$assignment.err" ]; then
+        echo "Detected output difference:" 
+        cat "$assignment.err" 
+        echo 
+    else
+        ((out_ok++))
+    fi
+
 done
 
-echo "Scores saved to: $scores_csv"
-echo ""
-echo "All done!"
+
+echo
+run_score=$( awk "BEGIN {printf \"%.2f\", ${runs_ok}/${total_runs} * 2; exit(0)}")
+output_score=$( awk "BEGIN {printf \"%.2f\", ${out_ok}/${total_runs} * 2; exit(0)}")
+compile_score=$( awk "BEGIN {printf \"%.2f\", ${compile_score}; exit(0)}")
+
+# Check for comments. 
+comment_count=`( grep "/\*" $inputfile; grep "//" $inputfile; ) | cat | wc -l`
+line_count=`cat $inputfile | wc -l`
+comment_score=$( awk "BEGIN {printf \"%.2f\", (${comment_weight} * ${comment_count})/${line_count} * 2; exit(0)}")
+
+echo "$student_name:    compile = $compile_score,   run = $run_score ($runs_ok/$total_runs),    output = $output_score ($out_ok/$total_runs),   comments = $comment_score"
+
+# Write it out to a csv file
+echo "$student_name,$compile_score,$run_score,$output_score,$comment_score" >> "$scores_csv"
+
+# clean up
+rm "$prog" "$assignment.err" "$assignment.out"
+
 exit 0;

@@ -13,7 +13,6 @@ usage()
     echo "  -u  =   Update this script"
     echo "  -f  =   Fetch the latest lab materials for the given lab"
     echo "  -p  =   Print output"
-    echo "  -k  =   Keep output log, even if execution is perfect"
     # Hidden options, since they won't really need to be changed...
     #echo "  -a  =   Set the archive URL"
     #echo "  -s  =   Set the script URL"
@@ -26,7 +25,6 @@ script_url="https://raw.githubusercontent.com/krixi/c-lab-grader/master/grade"
 update_self=0
 update_lab=0
 print_output=0
-keep_output=0
 while getopts "a:s:ufpk?" option; do
     case $option in
         a) archive_url=$OPTARG ;;
@@ -34,7 +32,6 @@ while getopts "a:s:ufpk?" option; do
         u) update_self=1 ;;
         f) update_lab=1 ;;
         p) print_output=1 ;;
-        k) keep_output=1 ;;
         \?) usage ;;
     esac
 done
@@ -176,7 +173,7 @@ scores_csv=`readlink -f "$scores_csv"`
 # <compile score> = 2 if compiles with no errors or warnings, 1 if warnings, 0 if errors. 
 # <run score> = 2 if runs and exits with no error, 1 if exits with error, 0 if does not run
 # <output score> = 2 if the output matches, 1 if formatting is off but values are there, 0 if values are off. 
-echo "last_name,first_name,compile_score,run_score,output_score,comment_score" >> "$scores_csv"
+echo "student_name,compile_score,run_score,output_score,comment_score" >> "$scores_csv"
 
 echo "Running tests..."
 # Loop through all of the files in the input, and process them one by one, by calling the lab-specific script. 
@@ -188,7 +185,7 @@ do
     fullname=`readlink -f "$file"`
     
     # Call the lab-specific grading script. 
-    "${tmp_dir}/${grade_script}" $fullname $scores_csv > "$out_file" 2>&1
+    "$tmp_dir/$grade_script" $fullname $scores_csv > "$out_file" 2>&1
     rv=$?
     
     # print out output if that is enabled
@@ -197,13 +194,7 @@ do
     fi
 
     # Remove the log file if that's enabled
-    if [ $rv -eq 0 ]; then
-        echo "No errors detected!"
-        if [ $keep_output -eq 0 ]; then
-            echo "Deleting output file: $out_file"
-            rm "$out_file"
-        fi
-    else
+    if [ $rv -ne 0 ]; then
         echo "Errors were encountered"
     fi
 
