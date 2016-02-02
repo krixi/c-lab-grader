@@ -5,8 +5,8 @@
 
 # Specific values for this lab:
 assignment="lab1"
-CC=c99
-CFLAGS=-Wall
+CC=gcc
+CFLAGS="-Wall -std=c99"
 tests_dir="tests"
 comment_weight=4.5
 create_tests=0
@@ -38,7 +38,6 @@ fi
 
 # This is the current directory
 cur_dir="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )" 
-echo "cur_dir = $cur_dir"
 tests_dir="${cur_dir}/${tests_dir}";
 
 
@@ -58,10 +57,13 @@ for ((i=0; i<${names_len}; i++ )); do
         student_name="$student_name ${names[$i]}"
     fi
 done
-echo "Name = $student_name"
+echo "Assignment: $lab_name"
+echo "Student:    $student_name"
+echo 
 
 if [ "$lab_name" != "$assignment" ]; then
-    echo "WARNING: assignment name does not match!"
+    echo "ERROR: Expected assignment name: $assignment"
+    echo "Please remember to name your file using this convention: last_first_labN.c"
     echo "Skipping $inputfile ..."
     echo ""
     exit 1
