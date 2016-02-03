@@ -1,0 +1,2 @@
+Enter a temperature in degrees Celsius: That is 122.00 Fahrenheit 
+Enter a temperature in degrees Fahrenheit: That is 10.00 Celsius 
