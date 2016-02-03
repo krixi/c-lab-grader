@@ -1,0 +1,5 @@
+Enter a value for N that is >= 0: Enter a number: Enter a number: Enter a number: Enter a number: Enter a number: Enter a number: Enter a number: Enter a number: Enter a number: Enter a number: Enter a number: Enter a number: Enter a number: Enter a number: Enter a number: Enter a number: Enter a number: Enter a number: Enter a number: Enter a number: Enter a number: Enter a number: Enter a number: The Highest is: 2.000
+The Lowest is: 0.000
+The Average is: 0.522
+The Range is: 2.000
+The Standard deviation is: 0.580

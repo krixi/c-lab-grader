@@ -1,0 +1,5 @@
+Enter a value for N that is >= 0: Enter a number: Enter a number: Enter a number: Enter a number: Enter a number: Enter a number: The Highest is: 18.100
+The Lowest is: -12.900
+The Average is: 1.370
+The Range is: 31.000
+The Standard deviation is: 9.630

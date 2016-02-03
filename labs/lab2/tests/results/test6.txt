@@ -1,0 +1,7 @@
+Enter a value for N that is >= 0: Invalid value for N
+Enter a value for N that is >= 0: Invalid value for N
+Enter a value for N that is >= 0: Enter a number: The Highest is: 13.000
+The Lowest is: 13.000
+The Average is: 13.000
+The Range is: 0.000
+The Standard deviation is: 0.000
