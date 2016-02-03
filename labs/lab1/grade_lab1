@@ -8,7 +8,7 @@ assignment="lab1"
 CC=gcc
 CFLAGS="-Wall -std=c99"
 tests_dir="tests"
-comment_weight=4.5
+comment_weight=4.0
 create_tests=0
 
 usage()
@@ -109,11 +109,16 @@ do
     echo 
     echo "[$total_runs: `basename $testfile`]" 
 
+    # Show the input
+    cat $testfile
+    echo 
+
     # Run it
     ./"$prog" < $testfile > "$assignment.out" 2> "$assignment.err"
     rv=$?
 
     cat "$assignment.out"
+    echo 
 
     if [ $rv -ne 0 ]; then
         echo "Detected runtime error:" 
@@ -140,8 +145,6 @@ do
         if [ $create_tests -ne 1 ]; then
             exit 1
         else 
-            echo
-            cat "$assignment.out"
             echo
             read -p "Create from these results? (y/n) " -n 1 -r
             echo 
@@ -176,11 +179,20 @@ output_score=$( awk "BEGIN {printf \"%.2f\", ${out_ok}/${total_runs} * 2; exit(0
 compile_score=$( awk "BEGIN {printf \"%.2f\", ${compile_score}; exit(0)}")
 
 # Check for comments. 
-comment_count=`( grep "/\*" $inputfile; grep "//" $inputfile; ) | cat | wc -l`
+comment_count=`( grep "/\*" $inputfile; grep "//" $inputfile; grep "^ \*" $inputfile; ) | cat | wc -l`
 line_count=`cat $inputfile | wc -l`
 comment_score=$( awk "BEGIN {printf \"%.2f\", (${comment_weight} * ${comment_count})/${line_count} * 2; exit(0)}")
 
-echo "$student_name:    compile = $compile_score,   run = $run_score ($runs_ok/$total_runs),    output = $output_score ($out_ok/$total_runs),   comments = $comment_score"
+
+echo "---------------------------------------------------------"
+echo "         TEST RESULTS FOR ASSIGNMENT: $assignment"
+echo
+echo " Student:     $student_name"
+echo " Compiling:   $compile_score"
+echo " Execution:   $run_score ($runs_ok/$total_runs)"
+echo " Output:      $output_score ($out_ok/$total_runs)"
+echo " Comments:    $comment_score"
+echo
 
 # Write it out to a csv file
 echo "$student_name,$compile_score,$run_score,$output_score,$comment_score" >> "$scores_csv"
