@@ -3,11 +3,12 @@
 This repository contains the code for a program that will grade a student's c program by compiling it, running it with various different inputs, and expecting a specific output for each input. 
 
 The repository contains the following pieces:
-/grade          -> Top level shell script, downloaded by students once.
-/labN/          -> Lab specific folders that each contain a similar structure:
-/labN/grade_labN    -> script that is to be provided one parameter, the path to the C file to grade.
-/labN/tests/        -> directory of .txt files, each of which is provided as input on the command line
-/labN/tests/results/    -> directory of test results, with names corresponding to the test that was run. 
+
+- `/grade`                -> Top level shell script, downloaded by students once.
+- `/labN/`                -> Lab specific folders that each contain a similar structure:
+- `/labN/grade_labN`      -> script that is to be provided one parameter, the path to the C file to grade.
+- `/labN/tests/`          -> directory of .txt files, each of which is provided as input on the command line
+- `/labN/tests/results/`  -> directory of test results, with names corresponding to the test that was run. 
 
 ## Usage
 The way this works, anyone that wants to use it will download the top-level 'grade' script one time.
