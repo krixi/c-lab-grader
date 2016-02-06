@@ -80,6 +80,12 @@ output_score=0
 comment_score=0
 prog="${assignment}_prog"
 
+echo
+echo "------------"
+echo "Compiling..."
+echo "------------"
+echo
+
 # compile it
 ${CC} ${CFLAGS} "$inputfile" -o "$prog" 2> "$assignment.err" > "$assignment.out"
 rv=$?
@@ -95,6 +101,9 @@ elif [ -s "$assignment.err" ]; then
     cat "$assignment.err" "$assignment.out" 
     echo 
     compile_score=1
+else
+    echo "OK!"
+    echo
 fi
 
 out_ok=0
@@ -107,9 +116,14 @@ for testfile in "$tests_dir"/*.txt
 do
     ((total_runs++))
     echo 
-    echo "[$total_runs: `basename $testfile`]" 
+    echo "[====================== test $total_runs: `basename $testfile` ======================]" 
 
     # Show the input
+    echo
+    echo "------"
+    echo "Input:"
+    echo "------"
+    echo
     cat $testfile
     echo 
 
@@ -117,9 +131,19 @@ do
     ./"$prog" < $testfile > "$assignment.out" 2> "$assignment.err"
     rv=$?
 
+    echo
+    echo "-------"
+    echo "Output:"
+    echo "-------"
+    echo
     cat "$assignment.out"
     echo 
 
+    echo
+    echo "----------"
+    echo "Execution:"
+    echo "----------"
+    echo
     if [ $rv -ne 0 ]; then
         echo "Detected runtime error:" 
         cat "$assignment.err" 
@@ -129,6 +153,7 @@ do
         cat "$assignment.err" 
         echo 
     else
+        echo "OK!"
         ((runs_ok++))
     fi
 
@@ -155,18 +180,23 @@ do
         fi
     fi
 
+    echo
+    echo "----------------"
+    echo "Checking output:"
+    echo "----------------"
+    echo
+
     # Make sure the output is what is expected
     diff -ud "$result_file" "$assignment.out" > "$assignment.err" 2>/dev/null
     rv=$?
-    if [ $rv -ne 0 ]; then
-        echo "Detected diff error:" 
+    if [ $rv -ne 0 -o -s "$assignment.err" ]; then
+        # Print diff to ouput file
+        echo "Detected diff error:"
         cat "$assignment.err" 
-        echo 
-    elif [ -s "$assignment.err" ]; then
-        echo "Detected output difference:" 
-        cat "$assignment.err" 
-        echo 
+        echo
     else
+        echo "OK!"
+        echo
         ((out_ok++))
     fi
 
@@ -191,7 +221,7 @@ echo " Student:     $student_name"
 echo " Compiling:   $compile_score"
 echo " Execution:   $run_score ($runs_ok/$total_runs)"
 echo " Output:      $output_score ($out_ok/$total_runs)"
-echo " Comments:    $comment_score"
+echo " Comments:    $comment_score "
 echo
 
 # Write it out to a csv file

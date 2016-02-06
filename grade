@@ -194,7 +194,6 @@ do
         cat "$out_file"
     fi
 
-    # Remove the log file if that's enabled
     if [ $rv -ne 0 ]; then
         echo "Errors were encountered"
     fi
