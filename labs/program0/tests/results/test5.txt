@@ -1,0 +1,16 @@
+Enter an odd number less than or equal to 9 and greater than 0 > You have entered a number less than 1. Please try again.
+
+Enter an odd number less than or equal to 9 and greater than 0 > You have entered a number less than 1. Please try again.
+
+Enter an odd number less than or equal to 9 and greater than 0 > You have entered an even number. Please try again.
+
+Enter an odd number less than or equal to 9 and greater than 0 > You have entered a number greater than 9. Please try again.
+
+Enter an odd number less than or equal to 9 and greater than 0 > 
+      1 
+    1 2 3 
+  1 2 3 4 5 
+1 2 3 4 5 6 7 
+  1 2 3 4 5 
+    1 2 3 
+      1 

@@ -1,11 +1,13 @@
 
+ifndef DEST
 DEST=~/www/csci-112-labs/
+endif
 
-
+TARGETS=lab% program%
 
 .PHONY: clean check-env
 
-lab%: check-env
+$(TARGETS): check-env
 	mkdir -p $(DEST); \
 	cd labs; \
 	tar -czvf $@.tar.gz $@; \
@@ -21,3 +23,6 @@ endif
 clean:
 	rm -rf lab*_results/
 	rm -rf .lab*/
+	rm -rf program*_results/
+	rm -rf .program*/
+
