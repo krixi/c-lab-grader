@@ -7,12 +7,14 @@ echo "CSCI 112 - Lab Grader"
 # This is an automatic grading script for this course. 
 usage()
 {
-    echo "Usage: `basename $0` [options] <assignment name> <path> "
+    echo "Usage: ./`basename $0` [options] <assignment> <path> "
     echo "      <path> can be either a file or folder name"
     echo "Options:"
     echo "  -u  =   Update this script"
-    echo "  -f  =   Fetch the latest lab materials for the given lab"
-    echo "  -p  =   Print output"
+    echo "  -f  =   Fetch the latest lab materials for the given lab (default behavior)"
+    echo "  -F  =   Do not fetch the latest lab materials for the given lab (offline mode)"
+    echo "  -p  =   Print output. Implied if <path> is a file"
+    echo "  -P  =   Suppress printed output."
     # Hidden options, since they won't really need to be changed...
     #echo "  -a  =   Set the archive URL"
     #echo "  -s  =   Set the script URL"
@@ -23,15 +25,18 @@ usage()
 archive_url="http://www.cs.montana.edu/~marissa.joehler/csci-112-labs"
 script_url="https://raw.githubusercontent.com/krixi/c-lab-grader/master/grade"
 update_self=0
-update_lab=0
+update_lab=1
 print_output=0
-while getopts "a:s:ufpk?" option; do
+no_print_output=0
+while getopts "a:s:ufFpPk?" option; do
     case $option in
         a) archive_url=$OPTARG ;;
         s) script_url=$OPTARG ;;
         u) update_self=1 ;;
         f) update_lab=1 ;;
+        F) update_lab=0 ;;
         p) print_output=1 ;;
+        P) no_print_output=1 ;;
         \?) usage ;;
     esac
 done
@@ -87,6 +92,8 @@ if [ -d "$input" ]; then
     files="${input}/*.c"
 elif [ -f "$input" ]; then
     files="$input"
+    # Single file implies -p unless -P is given
+    [[ $no_print_output -eq 1 ]] || print_output=1
 else
     echo "ERROR: $input is not a file or folder"
     exit 1
@@ -105,19 +112,20 @@ if [ -d "$out_dir" ]; then
 fi
 
 if [ $update_lab -eq 1 -a -d "$tmp_dir" ]; then
-    echo "Updating lab materials, removing: $tmp_dir"
+    #echo "Updating lab materials, removing: $tmp_dir"
     rm -rf "$tmp_dir"
 fi
 
 # Check if we have the files necessary to test this assignment. 
 # 1) Check for a folder with the assignment name
 if [ \! -d "$tmp_dir" ]; then
-    echo "No $tmp_dir folder, checking for archive..."
+    #echo "No $tmp_dir folder, checking for archive..."
     # 2) No folder, check for tar
     tar_file="${assignment}.tar.gz"
     if [ \! -f "$tar_file" ]; then
         # 3) No tar file, try to download it.
-        echo "No archive found locally, checking for download: "
+        #echo "No archive found locally, checking for download: "
+        echo "Checking for $assignment grading materials:"
         echo "      ${archive_url}/${tar_file}" 
         http_response=`curl -I "${archive_url}/${tar_file}" 2>/dev/null | head -n 1`
         echo "$http_response"
@@ -138,15 +146,16 @@ if [ \! -d "$tmp_dir" ]; then
         fi
     fi
 
-    echo "Extracting ${tar_file}:"
+    echo "Extracting ${tar_file}..."
     # extract the tar
     mkdir -p "$tmp_dir"
-    tar -zxvf "${tar_file}" -C "$tmp_dir" --strip-components 1 
+    tar -zxvf "${tar_file}" -C "$tmp_dir" --strip-components 1    >/dev/null 
     rv=$? #wait to finish and check if succeeded
     if [ $rv -ne 0 ]; then
         echo "ERROR: Unable to extract archive! Try deleting ${tar_file} and running this program again"
         exit 1
     fi
+    echo "Files extracted."
     
     # remove the archive, the files have been extracted
     rm "$tar_file"
@@ -177,6 +186,7 @@ scores_csv=`readlink -f "$scores_csv"`
 echo "student_name,compile_score,run_score,output_score,comment_score" >> "$scores_csv"
 
 echo "Running tests..."
+echo
 # Loop through all of the files in the input, and process them one by one, by calling the lab-specific script. 
 for file in $files
 do
@@ -192,12 +202,14 @@ do
     # print out output if that is enabled
     if [ $print_output -eq 1 ]; then
         cat "$out_file"
+    elif [ $rv -eq 0 ]; then
+        (tail -n 1 "$scores_csv" | awk -F',' '{ print "    Compile:", $2, "Run:", $3, "Output:", $4, "Comments:", $5 }')
     fi
 
     if [ $rv -ne 0 ]; then
-        echo "Errors were encountered"
+        echo "    Errors were encountered"
     fi
-
+    echo
 done
 
 echo "Scores:"
