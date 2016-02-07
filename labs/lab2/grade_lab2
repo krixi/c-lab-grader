@@ -106,6 +106,7 @@ else
     echo
 fi
 
+values_ok=0
 out_ok=0
 runs_ok=0
 total_runs=0
@@ -194,10 +195,43 @@ do
         echo "Detected diff error:"
         cat "$assignment.err" 
         echo
+
+        # Check for GREP tests
+        grep_test=`echo $(basename "$testfile") | sed 's/\.txt/\.grep/'`
+        grep_lines=0
+        grep_ok=0
+        if [ -f "$tests_dir/$grep_test" ]; then
+            echo "Formatting is off, checking for correct values..."
+            echo
+            while IFS='' read -r line || [[ -n "$line" ]]; do
+                line_display=$(echo "$line" | sed -e 's:\\\.:\.:' -e 's:\\-:-:')
+                echo "Checking for value: $line_display"
+                grep_rv=$(cat "$assignment.out" | grep "$line" | wc -l)
+                ((grep_lines++))
+                if [ $grep_rv -gt 0 ]; then
+                    echo "OK!"
+                    # For lab 0 and 1, its ok if the values are there
+                    ((grep_ok++))
+                fi
+            done < "$tests_dir/$grep_test"
+
+            if [ $grep_lines -eq $grep_ok -a $grep_lines -gt 0 ]; then
+                ((values_ok++))
+                echo
+                echo "All values OK!"
+                echo
+            else
+                echo 
+                echo "ERROR: Not all of the expected results were found."
+                echo "Double-check your formulas and data types. "
+                echo
+            fi
+        fi
     else
         echo "OK!"
         echo
         ((out_ok++))
+        ((values_ok++))
     fi
 
 done
@@ -205,7 +239,7 @@ done
 
 echo
 run_score=$( awk "BEGIN {printf \"%.2f\", ${runs_ok}/${total_runs} * 2; exit(0)}")
-output_score=$( awk "BEGIN {printf \"%.2f\", ${out_ok}/${total_runs} * 2; exit(0)}")
+output_score=$( awk "BEGIN {printf \"%.2f\", (${out_ok}+${values_ok})/${total_runs}; exit(0)}")
 compile_score=$( awk "BEGIN {printf \"%.2f\", ${compile_score}; exit(0)}")
 
 # Check for comments. 
@@ -220,7 +254,9 @@ echo
 echo " Student:     $student_name"
 echo " Compiling:   $compile_score"
 echo " Execution:   $run_score ($runs_ok/$total_runs)"
-echo " Output:      $output_score ($out_ok/$total_runs)"
+echo " Output:      $output_score "
+echo "    Format:   ($out_ok/$total_runs)"
+echo "    Values:   ($values_ok/$total_runs)"
 echo " Comments:    $comment_score "
 echo
 
