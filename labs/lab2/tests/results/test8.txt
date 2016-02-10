@@ -1,0 +1,5 @@
+Enter a value for N that is >= 0: Enter a number: Enter a number: The Highest is: 1.500
+The Lowest is: -1.500
+The Average is: 0.000
+The Range is: 3.000
+The Standard deviation is: 1.500
