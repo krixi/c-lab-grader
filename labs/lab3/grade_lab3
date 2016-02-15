@@ -236,11 +236,59 @@ do
 
 done
 
+echo "Checking file content..."
+# Check for contents in file:
+file_content=5
+total_content=5
+
+# Check that an enum was used
+grep_rv=$(cat "$inputfile" | grep "enum" | wc -l)
+if [ $grep_rv -eq 0 ]; then
+    echo "WARNING: No enum found in source file!"
+    echo "You must implement the menu using an enum for full credit"
+    ((file_content--))
+else
+    echo "Found enum!"
+fi
+
+# Check for the two required constants. 
+grep_rv=$(cat "$inputfile" | grep "#define PI" | wc -l)
+if [ $grep_rv -eq 0 ]; then
+    echo "WARNING: No #define PI found in source file!"
+    echo "You must define a constant for PI for full credit"
+    echo "Be sure to use capital letters for your define"
+    ((file_content--))
+    # make sure it is actually used
+    grep_rv=$(cat "$inputfile" | grep "PI" | wc -l)
+    if [ $grep_rv -lt 2 ]; then
+        echo "WARNING: You must use the constant PI in your calculations, to receive full credit"
+        ((file_content--))
+    fi
+else 
+    echo "Found PI!"
+fi
+
+grep_rv=$(cat "$inputfile" | grep "#define LOOP_LIMIT" | wc -l)
+if [ $grep_rv -eq 0 ]; then
+    echo "WARNING: No #define PI found in source file!"
+    echo "You must define a constant for PI for full credit"
+    echo "Be sure to use capital letters for your define"
+    ((file_content--))
+    # make sure it is actually used
+    grep_rv=$(cat "$inputfile" | grep "LOOP_LIMIT" | wc -l)
+    if [ $grep_rv -lt 2 ]; then
+        echo "WARNING: You must use the constant LOOP_LIMIT in your program, to receive full credit"
+        ((file_content--))
+    fi
+else
+    echo "Found LOOP_LIMIT!"
+fi
 
 echo
 run_score=$( awk "BEGIN {printf \"%.2f\", ${runs_ok}/${total_runs} * 2; exit(0)}")
 output_score=$( awk "BEGIN {printf \"%.2f\", (${out_ok}+${values_ok})/${total_runs}; exit(0)}")
 compile_score=$( awk "BEGIN {printf \"%.2f\", ${compile_score}; exit(0)}")
+content_score=$( awk "BEGIN {printf \"%.2f\", ${file_content}/${total_content} * 2; exit(0)}")
 
 # Check for comments. 
 comment_count=`( grep "/\*" $inputfile; grep "//" $inputfile; grep "^ \*" $inputfile; ) | cat | wc -l`
@@ -257,11 +305,12 @@ echo " Execution:   $run_score ($runs_ok/$total_runs)"
 echo " Output:      $output_score "
 echo "    Format:   ($out_ok/$total_runs)"
 echo "    Values:   ($values_ok/$total_runs)"
+echo " Content:     $content_score ($file_content/$total_content)"
 echo " Comments:    $comment_score "
 echo
 
 # Write it out to a csv file
-echo "$student_name,$compile_score,$run_score,$output_score,$comment_score" >> "$scores_csv"
+echo "$student_name,$compile_score,$run_score,$output_score,$content_score,$comment_score" >> "$scores_csv"
 
 # clean up
 rm "$prog" "$assignment.err" "$assignment.out"
