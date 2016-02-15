@@ -6,7 +6,7 @@
 # Specific values for this lab:
 assignment="lab1"
 CC=gcc
-CFLAGS="-Wall -std=c99"
+CFLAGS="-Wall"
 tests_dir="tests"
 comment_weight=4.0
 create_tests=0
