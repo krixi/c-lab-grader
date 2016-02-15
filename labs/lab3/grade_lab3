@@ -41,7 +41,6 @@ cur_dir="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 tests_dir="${cur_dir}/${tests_dir}";
 
 
-
 #  last_name,first_name,compile_score,run_score,output_score,comment_score  >> "$scores_csv"
 
 # make sure it follows the naming convention - extract everything between the underscores, convert to array
@@ -70,6 +69,10 @@ if [ "$lab_name" != "$assignment" ]; then
 fi
 
 
+# get the output directory (this is where the scores.csv is stored). 
+out_dir="$( cd "$( dirname $scores_csv )" && pwd )/$( basename $inputfile | sed 's:\.c::')"
+mkdir -p "$out_dir"
+
 # print put the filename
 echo "[`basename $inputfile`]"
 
@@ -80,11 +83,6 @@ output_score=0
 comment_score=0
 prog="${assignment}_prog"
 
-echo
-echo "------------"
-echo "Compiling..."
-echo "------------"
-echo
 
 # compile it
 ${CC} ${CFLAGS} "$inputfile" -o "$prog" 2> "$assignment.err" > "$assignment.out"
@@ -92,20 +90,21 @@ rv=$?
 
 # Check for compiler errors and warmings. 
 if [ $rv -ne 0 ]; then
-    echo "Detected compiler error:" 
+    echo "Detected compiler error" 
     cat "$assignment.err" "$assignment.out" 
+    cat "$assignment.err" "$assignment.out" > "${out_dir}/${assignment}.compile" 
     echo 
     compile_score=0
 elif [ -s "$assignment.err" ]; then
-    echo "Detected compiler warning:" 
-    cat "$assignment.err" "$assignment.out" 
+    echo "Detected compiler warning" 
+    cat "$assignment.err" "$assignment.out" > "${out_dir}/${assignment}.compile" 
     echo 
     compile_score=1
 else
-    echo "OK!"
-    echo
+    echo "Compiled OK!"
 fi
 
+show_diff_instructions=0
 values_ok=0
 out_ok=0
 runs_ok=0
@@ -116,45 +115,28 @@ total_runs=0
 for testfile in "$tests_dir"/*.txt
 do
     ((total_runs++))
-    echo 
-    echo "[====================== test $total_runs: `basename $testfile` ======================]" 
+    echo
+    testname="$( basename $testfile | sed 's:\.txt::')"
+    echo "[====================== test $total_runs: $testname  ======================]" 
 
-    # Show the input
-    echo
-    echo "------"
-    echo "Input:"
-    echo "------"
-    echo
-    cat $testfile
-    echo 
+    cat $testfile > "${out_dir}/${testname}.in"
 
     # Run it
     ./"$prog" < $testfile > "$assignment.out" 2> "$assignment.err"
     rv=$?
 
-    echo
-    echo "-------"
-    echo "Output:"
-    echo "-------"
-    echo
-    cat "$assignment.out"
-    echo 
+    cat "$assignment.out" > "${out_dir}/${testname}.out"
 
-    echo
-    echo "----------"
-    echo "Execution:"
-    echo "----------"
-    echo
     if [ $rv -ne 0 ]; then
-        echo "Detected runtime error:" 
-        cat "$assignment.err" 
+        echo "Detected runtime error (check that you have 'return 0' at the end of your main function)" 
+        cat "$assignment.err" > "${out_dir}/${testname}.run"
         echo 
     elif [ -s "$assignment.err" ]; then
-        echo "Detected runtime warning:" 
-        cat "$assignment.err" 
+        echo "Detected runtime warning" 
+        cat "$assignment.err" > "${out_dir}/${testname}.run"
         echo 
     else
-        echo "OK!"
+        echo "Execution OK!"
         ((runs_ok++))
     fi
 
@@ -181,20 +163,14 @@ do
         fi
     fi
 
-    echo
-    echo "----------------"
-    echo "Checking output:"
-    echo "----------------"
-    echo
-
     # Make sure the output is what is expected
     diff -ud "$result_file" "$assignment.out" > "$assignment.err" 2>/dev/null
     rv=$?
     if [ $rv -ne 0 -o -s "$assignment.err" ]; then
+        show_diff_instructions=1
         # Print diff to ouput file
-        echo "Detected diff error:"
-        cat "$assignment.err" 
-        echo
+        echo "Detected diff error"
+        cat "$assignment.err" > "${out_dir}/${testname}.diff"
 
         # Check for GREP tests
         grep_test=`echo $(basename "$testfile") | sed 's/\.txt/\.grep/'`
@@ -202,14 +178,11 @@ do
         grep_ok=0
         if [ -f "$tests_dir/$grep_test" ]; then
             echo "Formatting is off, checking for correct values..."
-            echo
             while IFS='' read -r line || [[ -n "$line" ]]; do
                 line_display=$(echo "$line" | sed -e 's:\\\.:\.:' -e 's:\\-:-:')
-                echo "Checking for value: $line_display"
                 grep_rv=$(cat "$assignment.out" | grep "$line" | wc -l)
                 ((grep_lines++))
                 if [ $grep_rv -gt 0 ]; then
-                    echo "OK!"
                     # For lab 0 and 1, its ok if the values are there
                     ((grep_ok++))
                 fi
@@ -217,25 +190,28 @@ do
 
             if [ $grep_lines -eq $grep_ok -a $grep_lines -gt 0 ]; then
                 ((values_ok++))
-                echo
-                echo "All values OK!"
-                echo
+                echo "Values OK!"
             else
-                echo 
                 echo "ERROR: Not all of the expected results were found."
                 echo "Double-check your formulas and data types. "
-                echo
             fi
         fi
     else
-        echo "OK!"
-        echo
+        echo "Format and values OK!"
         ((out_ok++))
         ((values_ok++))
     fi
 
+
+    # Clean up files as necessary. 
+    if [ ! -f "${out_dir}/${testname}.diff" ]; then
+        rm "${out_dir}/${testname}.in"
+        rm "${out_dir}/${testname}.out"
+    fi
 done
 
+echo
+echo "====================================="
 echo "Checking file content..."
 # Check for contents in file:
 file_content=5
@@ -307,7 +283,14 @@ echo "    Format:   ($out_ok/$total_runs)"
 echo "    Values:   ($values_ok/$total_runs)"
 echo " Content:     $content_score ($file_content/$total_content)"
 echo " Comments:    $comment_score "
-echo
+if [ $show_diff_instructions -eq 1 ]; then
+    echo
+    echo " View detailed results, including diffs of formatting errors, here: "
+    echo "    $out_dir"
+    echo
+    echo " For example, run this command to view all formatting differences:"
+    echo "    vi $out_dir/*.diff "
+fi
 
 # Write it out to a csv file
 echo "$student_name,$compile_score,$run_score,$output_score,$content_score,$comment_score" >> "$scores_csv"
