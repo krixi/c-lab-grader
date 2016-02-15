@@ -1,0 +1,10 @@
+Please choose an option: (0) Sine (1) Cosine (2) Tangent (3) QUIT
+Enter your choice > 	cos(0) = 1.0000
+	cos(15) = 0.9659
+	cos(30) = 0.8660
+	cos(45) = 0.7071
+	cos(60) = 0.5000
+	cos(75) = 0.2588
+	cos(90) = 0.0000
+Please choose an option: (0) Sine (1) Cosine (2) Tangent (3) QUIT
+Enter your choice > You chose QUIT. Thank you, come again!

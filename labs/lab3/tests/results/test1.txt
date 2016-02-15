@@ -1,0 +1,10 @@
+Please choose an option: (0) Sine (1) Cosine (2) Tangent (3) QUIT
+Enter your choice > 	sin(0) = 0.0000
+	sin(15) = 0.2588
+	sin(30) = 0.5000
+	sin(45) = 0.7071
+	sin(60) = 0.8660
+	sin(75) = 0.9659
+	sin(90) = 1.0000
+Please choose an option: (0) Sine (1) Cosine (2) Tangent (3) QUIT
+Enter your choice > You chose QUIT. Thank you, come again!

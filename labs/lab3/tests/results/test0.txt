@@ -1,0 +1,6 @@
+Please choose an option: (0) Sine (1) Cosine (2) Tangent (3) QUIT
+Enter your choice > -1 is an invalid option. Please try again.
+Please choose an option: (0) Sine (1) Cosine (2) Tangent (3) QUIT
+Enter your choice > 4 is an invalid option. Please try again.
+Please choose an option: (0) Sine (1) Cosine (2) Tangent (3) QUIT
+Enter your choice > You chose QUIT. Thank you, come again!

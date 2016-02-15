@@ -1,0 +1,10 @@
+Please choose an option: (0) Sine (1) Cosine (2) Tangent (3) QUIT
+Enter your choice > 	tan(0) = 0.0000
+	tan(15) = 0.2679
+	tan(30) = 0.5773
+	tan(45) = 1.0000
+	tan(60) = 1.7320
+	tan(75) = 3.7320
+	tan(90) is UNDEFINED
+Please choose an option: (0) Sine (1) Cosine (2) Tangent (3) QUIT
+Enter your choice > You chose QUIT. Thank you, come again!
