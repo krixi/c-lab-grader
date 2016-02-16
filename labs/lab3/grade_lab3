@@ -246,8 +246,8 @@ fi
 
 grep_rv=$(cat "$inputfile" | grep "#define LOOP_LIMIT" | wc -l)
 if [ $grep_rv -eq 0 ]; then
-    echo "WARNING: No #define PI found in source file!"
-    echo "You must define a constant for PI for full credit"
+    echo "WARNING: No #define LOOP_LIMIT found in source file!"
+    echo "You must define a constant LOOP_LIMIT for full credit"
     echo "Be sure to use capital letters for your define"
     ((file_content--))
     # make sure it is actually used
