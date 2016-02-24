@@ -1,0 +1,15 @@
+Welcome to the MOTION EQUATION CALCULATOR
+
+Choose a motion equation 1-4 or choose 5 to QUIT > Invalid Option. Please try again.
+
+Choose a motion equation 1-4 or choose 5 to QUIT > 	Enter initial velocity > 	Enter acceleration > 	Enter time > Your result is 7.7000.
+
+Choose a motion equation 1-4 or choose 5 to QUIT > 	Enter initial position > 	Enter initial velocity > 	Enter time > 	Enter acceleration > Your result is 57.4000.
+
+Choose a motion equation 1-4 or choose 5 to QUIT > 	Enter initial velocity > 	Enter acceleration > 	Enter final position > 	Enter initial position > Your result is 4.2273.
+
+Choose a motion equation 1-4 or choose 5 to QUIT > 	Enter initial position > 	Enter final velocity > 	Enter initial velocity > 	Enter time > Your result is 22.0150.
+
+Choose a motion equation 1-4 or choose 5 to QUIT > Invalid Option. Please try again.
+
+Choose a motion equation 1-4 or choose 5 to QUIT > Thank you for using the MOTION EQUATION CALCULATOR. Goodbye.
