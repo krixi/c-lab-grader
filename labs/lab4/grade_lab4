@@ -221,6 +221,8 @@ total_content=1
 grep_rv=$(cat "$inputfile" | grep "equation.*&result" | wc -l)
 if [ $grep_rv -lt 4 ]; then
     ((file_content--))
+    echo "You must call the equation functions using pass-by-reference, for example:"
+    echo "  equation1( &result );"
 else 
     echo "Found pass-by-reference calls"
 fi
