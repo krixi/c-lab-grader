@@ -9,7 +9,7 @@ CC=gcc
 CFLAGS="-Wall -std=c99 -lm"
 tests_dir="tests"
 comment_weight=5.0
-create_tests=1
+create_tests=0
 
 usage()
 {
