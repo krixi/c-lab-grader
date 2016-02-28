@@ -1,0 +1,9 @@
+Enter a bar code to check. Separate digits with a space >
+
+You entered the code: 0 1 1 1 1 0 8 5 6 8 0 7
+STEP 1: Sum of odds times 3 is 48
+STEP 2: Sum of the even digits is 15
+STEP 3: Total sum is 63
+STEP 4: Calculated check digit is 7
+STEP 5: Check digit and last digit match
+Barcode is VALID.
