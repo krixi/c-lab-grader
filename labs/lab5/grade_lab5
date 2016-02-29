@@ -1,10 +1,10 @@
 #!/bin/bash
 # Marissa Joehler
-# CSCI 112 - shell script to grade lab1
+# CSCI 112 - shell script to grade lab5
 # 2/1/2016
 
 # Specific values for this lab:
-assignment="program1"
+assignment="lab5"
 CC=gcc
 CFLAGS="-Wall -std=c99"
 tests_dir="tests"
