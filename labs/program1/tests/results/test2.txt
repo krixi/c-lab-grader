@@ -1,0 +1,15 @@
+Enter the value of n > Enter 6 integers (positive, negative, or zero) >
+The initial array contains:
+   +7
+   +3
+   +0
+   -1
+   +2
+   +4
+The array is now sorted:
+   -1
+   +0
+   +2
+   +3
+   +4
+   +7

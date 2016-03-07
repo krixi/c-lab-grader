@@ -1,0 +1,3 @@
+Enter the value of n > Enter 0 integers (positive, negative, or zero) >
+The initial array contains:
+The array is now sorted:

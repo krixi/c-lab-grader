@@ -1,0 +1,17 @@
+Enter the value of n > -1 is less than zero. Please try again.
+
+Enter the value of n > 52 exceeds the maximum array size. Please try again.
+
+Enter the value of n > Enter 5 integers (positive, negative, or zero) >
+The initial array contains:
+   +3
+   -2
+   +1
+   -4
+   +0
+The array is now sorted:
+   -4
+   -2
+   +0
+   +1
+   +3

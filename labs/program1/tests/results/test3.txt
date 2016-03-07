@@ -1,0 +1,9 @@
+Enter the value of n > Enter 3 integers (positive, negative, or zero) >
+The initial array contains:
+   +0
+  -12
+  +13
+The array is now sorted:
+  -12
+   +0
+  +13
