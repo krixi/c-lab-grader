@@ -1,0 +1,76 @@
+Guess a letter (6 attempts left) > 
+___
+|   
+|   
+|   
+-----
+s******* 
+There is 1 s
+
+Guess a letter (6 attempts left) > 
+___
+|   
+|   
+|   
+-----
+se*e**** 
+There are 2 e's
+
+Guess a letter (6 attempts left) > 
+___
+|   
+|   
+|   
+-----
+sere**** 
+There is 1 r
+
+Guess a letter (6 attempts left) > 
+___
+| o 
+|   
+|   
+-----
+sere**** 
+You already guessed e!
+
+Guess a letter (5 attempts left) > 
+___
+| o 
+|   
+|   
+-----
+seren*** 
+There is 1 n
+
+Guess a letter (5 attempts left) > 
+___
+| o 
+|   
+|   
+-----
+sereni** 
+There is 1 i
+
+Guess a letter (5 attempts left) > 
+___
+| o 
+|   
+|   
+-----
+serenit* 
+There is 1 t
+
+Guess a letter (5 attempts left) > 
+___
+| o 
+|   
+|   
+-----
+serenity 
+There is 1 y
+
+
+Game Over
+8 total guesses made.
+You won!

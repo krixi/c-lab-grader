@@ -1,0 +1,77 @@
+Guess a letter (6 attempts left) > 
+___
+|   
+|   
+|   
+-----
+******a* 
+There is 1 a
+
+Guess a letter (6 attempts left) > 
+___
+| o 
+|   
+|   
+-----
+******a* 
+There are no s's
+
+Guess a letter (5 attempts left) > 
+___
+|\o 
+|   
+|   
+-----
+******a* 
+There are no d's
+
+Guess a letter (4 attempts left) > 
+___
+|\o/
+|   
+|   
+-----
+******a* 
+There are no f's
+
+Guess a letter (3 attempts left) > 
+___
+|\o/
+| | 
+|   
+-----
+******a* 
+There are no g's
+
+Guess a letter (2 attempts left) > 
+___
+|\o/
+| | 
+|   
+-----
+**tt**at 
+There are 3 t's
+
+Guess a letter (2 attempts left) > 
+___
+|\o/
+| | 
+|/  
+-----
+**tt**at 
+There are no h's
+
+Guess a letter (1 attempts left) > 
+___
+|\o/
+| | 
+|/ \
+-----
+**tt**at 
+There are no p's
+
+
+Game Over
+8 total guesses made.
+Out of guesses.
+You lost.

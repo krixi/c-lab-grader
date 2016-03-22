@@ -3,7 +3,7 @@ ifndef DEST
 DEST=~/www/csci-112-labs/
 endif
 
-TARGETS=lab% program%
+TARGETS=lab% program% bonus%
 
 .PHONY: clean check-env
 
@@ -25,4 +25,6 @@ clean:
 	rm -rf .lab*/
 	rm -rf program*_results/
 	rm -rf .program*/
+	rm -rf bonus*_results/
+	rm -rf .bonus*/
 
