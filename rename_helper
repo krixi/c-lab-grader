@@ -1,0 +1,33 @@
+#!/bin/sh
+
+if [ $# -lt 1 ]; then
+    echo "ERROR: You must provide the folder full of files that need renaming"
+    exit 1
+fi
+
+#folder=`readlink -f "$1"`
+folder=$1
+echo "Checking for .c files in: $folder"
+if [ ! -d "$folder" ]; then
+    echo "ERROR: Cannot find folder: $folder"
+    exit 1
+fi
+
+for file in "$folder"*.c; do
+
+    echo "File:   $file"
+
+
+    # Extract the last bit, which is the name we want. 
+    # Format:
+    # 95545-245984 - Busch Kyle - Feb 21, 2016 228 PM - busch_kyle_lab3.c
+    filename=$(echo "$file" | awk '{ print $12 }')
+
+    echo "Rename: $filename"
+
+    mv "$file" "$folder/$filename"
+
+done
+
+echo "Done!"
+exit 0
