@@ -1,16 +1,16 @@
 #!/bin/bash
 # Marissa Joehler
-# CSCI 112 - shell script to grade bonus1
-# 3/21/2016
+# CSCI 112 - shell script to grade program2
+# 3/23/2016
 
 # Specific values for this lab:
-assignment="bonus1"
+assignment="program2"
 CC=gcc
 CFLAGS="-Wall -std=c99"
 tests_dir="tests"
 comment_weight=5.0
 create_tests=0
-check_for_content=1
+check_for_content=0
 
 usage()
 {
@@ -125,8 +125,13 @@ do
     param=`cat $testfile | head -n1`
     input=$(echo $testfile | sed -e 's:test\(.\)\.txt:input\1\.txt:')
     # Run it
-    ./"$prog" "$param" < "$input"   > "$assignment.out" 2> "$assignment.err"
-    rv=$?
+    if [ -f "$input" ]; then
+        ./"$prog" $param < "$input"   > "$assignment.out" 2> "$assignment.err"
+        rv=$?
+    else
+        ./"$prog" $param  > "$assignment.out" 2> "$assignment.err"
+        rv=$?
+    fi
 
     cat "$assignment.out" > "${out_dir}/${testname}.out"
 

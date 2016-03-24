@@ -1,0 +1,27 @@
+noun: chair
+plural: chairs
+
+noun: dairy
+plural: dairies
+
+noun: boss
+plural: bosses
+
+noun: circus
+plural: circuses
+
+noun: fly
+plural: flies
+
+noun: dog
+plural: dogs
+
+noun: church
+plural: churches
+
+noun: clue
+plural: clues
+
+noun: dish
+plural: dishes
+
