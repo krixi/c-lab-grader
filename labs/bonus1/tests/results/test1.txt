@@ -4,7 +4,7 @@ ___
 |   
 |   
 -----
-s******* 
+s*******
 There is 1 s
 
 Guess a letter (6 attempts left) > 
@@ -13,7 +13,7 @@ ___
 |   
 |   
 -----
-se*e**** 
+se*e****
 There are 2 e's
 
 Guess a letter (6 attempts left) > 
@@ -22,7 +22,7 @@ ___
 |   
 |   
 -----
-sere**** 
+sere****
 There is 1 r
 
 Guess a letter (6 attempts left) > 
@@ -31,7 +31,7 @@ ___
 |   
 |   
 -----
-sere**** 
+sere****
 You already guessed e!
 
 Guess a letter (5 attempts left) > 
@@ -40,7 +40,7 @@ ___
 |   
 |   
 -----
-seren*** 
+seren***
 There is 1 n
 
 Guess a letter (5 attempts left) > 
@@ -49,7 +49,7 @@ ___
 |   
 |   
 -----
-sereni** 
+sereni**
 There is 1 i
 
 Guess a letter (5 attempts left) > 
@@ -58,7 +58,7 @@ ___
 |   
 |   
 -----
-serenit* 
+serenit*
 There is 1 t
 
 Guess a letter (5 attempts left) > 
@@ -67,7 +67,7 @@ ___
 |   
 |   
 -----
-serenity 
+serenity
 There is 1 y
 
 
