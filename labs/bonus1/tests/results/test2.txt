@@ -4,7 +4,7 @@ ___
 |   
 |   
 -----
-f***f** 
+f***f**
 There are 2 f's
 
 Guess a letter (6 attempts left) > 
@@ -13,7 +13,7 @@ ___
 |   
 |   
 -----
-f***f** 
+f***f**
 There are no q's
 
 Guess a letter (5 attempts left) > 
@@ -22,7 +22,7 @@ ___
 |   
 |   
 -----
-f***f** 
+f***f**
 There are no c's
 
 Guess a letter (4 attempts left) > 
@@ -31,7 +31,7 @@ ___
 |   
 |   
 -----
-f***f** 
+f***f**
 There are no v's
 
 Guess a letter (3 attempts left) > 
@@ -40,7 +40,7 @@ ___
 |   
 |   
 -----
-fi**f** 
+fi**f**
 There is 1 i
 
 Guess a letter (3 attempts left) > 
@@ -49,7 +49,7 @@ ___
 |   
 |   
 -----
-fir*f** 
+fir*f**
 There is 1 r
 
 Guess a letter (3 attempts left) > 
@@ -58,7 +58,7 @@ ___
 |   
 |   
 -----
-firef** 
+firef**
 There is 1 e
 
 Guess a letter (3 attempts left) > 
@@ -67,7 +67,7 @@ ___
 |   
 |   
 -----
-firef*y 
+firef*y
 There is 1 y
 
 Guess a letter (3 attempts left) > 
@@ -76,7 +76,7 @@ ___
 |   
 |   
 -----
-firefly 
+firefly
 There is 1 l
 
 
