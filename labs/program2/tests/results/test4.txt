@@ -1,0 +1,21 @@
+noun: student
+plural: students
+
+noun: group
+plural: groups
+
+noun: country
+plural: countries
+
+noun: problem
+plural: problems
+
+noun: case
+plural: cases
+
+noun: place
+plural: places
+
+noun: company
+plural: companies
+

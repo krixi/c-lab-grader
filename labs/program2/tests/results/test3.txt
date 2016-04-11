@@ -1,0 +1,15 @@
+noun: time
+plural: times
+
+noun: year
+plural: years
+
+noun: people
+plural: peoples
+
+noun: community
+plural: communities
+
+noun: place
+plural: places
+

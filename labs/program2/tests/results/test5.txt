@@ -1,0 +1,9 @@
+noun: business
+plural: businesses
+
+noun: research
+plural: researches
+
+noun: level
+plural: levels
+
