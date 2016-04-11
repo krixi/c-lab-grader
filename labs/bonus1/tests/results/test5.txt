@@ -1,0 +1,58 @@
+Guess a letter (6 attempts left) > 
+___
+|   
+|   
+|   
+-----
+d***** 
+There is 1 d
+
+Guess a letter (6 attempts left) > 
+___
+|   
+|   
+|   
+-----
+dr**** 
+There is 1 r
+
+Guess a letter (6 attempts left) > 
+___
+|   
+|   
+|   
+-----
+dra*** 
+There is 1 a
+
+Guess a letter (6 attempts left) > 
+___
+|   
+|   
+|   
+-----
+drag** 
+There is 1 g
+
+Guess a letter (6 attempts left) > 
+___
+|   
+|   
+|   
+-----
+drago* 
+There is 1 o
+
+Guess a letter (6 attempts left) > 
+___
+|   
+|   
+|   
+-----
+dragon 
+There is 1 n
+
+
+Game Over
+6 total guesses made.
+You won!
