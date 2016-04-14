@@ -1,12 +1,13 @@
 #!/bin/sh
 
-if [ $# -lt 1 ]; then
-    echo "ERROR: You must provide the folder full of files that need renaming"
+if [ $# -lt 2 ]; then
+    echo "Usage: $0 <lab name> <folder>"
     exit 1
 fi
 
-#folder=`readlink -f "$1"`
-folder=$1
+assignment=$1
+#folder=`readlink -f "$2"`
+folder=$2
 echo "Checking for .c files in: $folder"
 if [ ! -d "$folder" ]; then
     echo "ERROR: Cannot find folder: $folder"
@@ -23,10 +24,30 @@ for file in "$folder"*.c; do
     # 95545-245984 - Busch Kyle - Feb 21, 2016 228 PM - busch_kyle_lab3.c
     filename=$(echo "$file" | awk '{ print $12 }')
 
-    echo "Rename: $filename"
+    # make sure it follows the naming convention - extract everything between the underscores, convert to array
+    names=`echo $(basename "$filename") | sed 's/\(.*\)_\(.*\)_\(.*\)\.c/\1 \2 \3/'`
+    names=($names)
+    names_len=${#names[@]}
+    lab_name=""
+    student_name=""
+    for ((i=0; i<${names_len}; i++ )); do
+        if [ $((i+1)) -eq $names_len ]; then
+            lab_name=${names[$i]}
+        else
+            student_name="$student_name ${names[$i]}"
+        fi
+    done
+#    echo "Assignment: $lab_name"
+#    echo "Student:    $student_name"
+#    echo 
 
-    mv "$file" "$folder/$filename"
-
+    if [ "$lab_name" != "$assignment" ]; then
+        echo "ERROR: Expected filename format: last_first_$assignment.c. Skipping $filename ..."
+    else
+        echo "Rename: $filename"
+        mv "$file" "$folder/$filename"
+    fi
+    echo 
 done
 
 echo "Done!"

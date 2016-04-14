@@ -270,19 +270,28 @@ if [ $check_for_content -ne 0 ]; then
     fi
 
 
-    content_score=$( awk "BEGIN {printf \"%.2f\", ${file_content}/${total_content} * 2; exit(0)}")
+    content_score=$( awk "BEGIN {printf \"%.2f\", ${file_content}/${total_content} * 4; exit(0)}")
 fi
 
 echo
-run_score=$( awk "BEGIN {printf \"%.2f\", ${runs_ok}/${total_runs} * 2; exit(0)}")
-output_score=$( awk "BEGIN {printf \"%.2f\", (${out_ok}+${values_ok})/${total_runs}; exit(0)}")
-compile_score=$( awk "BEGIN {printf \"%.2f\", ${compile_score}; exit(0)}")
+run_score=$( awk "BEGIN {printf \"%.2f\", ${runs_ok}/${total_runs} * 4; exit(0)}")
+output_score=$( awk "BEGIN {printf \"%.2f\", (${out_ok}+${values_ok})/${total_runs} * 2; exit(0)}")
+compile_score=$( awk "BEGIN {printf \"%.2f\", ${compile_score} * 2; exit(0)}")
 
 # Check for comments. 
 comment_count=`( grep "/\*" $inputfile; grep "//" $inputfile; grep "^ \*" $inputfile; ) | cat | wc -l`
 line_count=`cat $inputfile | wc -l`
-comment_score=$( awk "BEGIN {printf \"%.2f\", (${comment_weight} * ${comment_count})/${line_count} * 2; exit(0)}")
+comment_score=$( awk "BEGIN {printf \"%.2f\", (${comment_weight} * ${comment_count})/${line_count} * 4; exit(0)}")
 
+if [ $show_diff_instructions -eq 1 ]; then
+    echo
+    echo " View detailed results, including diffs of formatting errors, here: "
+    echo "    $out_dir"
+    echo
+    echo " For example, run this command to view all formatting differences:"
+    echo "    vi $out_dir/*.diff "
+    echo
+fi
 
 echo "---------------------------------------------------------"
 echo "         TEST RESULTS FOR ASSIGNMENT: $assignment"
@@ -297,14 +306,6 @@ if [ $check_for_content -ne 0 ]; then
 echo " Content:     $content_score ($file_content/$total_content)"
 fi
 echo " Comments:    $comment_score "
-if [ $show_diff_instructions -eq 1 ]; then
-    echo
-    echo " View detailed results, including diffs of formatting errors, here: "
-    echo "    $out_dir"
-    echo
-    echo " For example, run this command to view all formatting differences:"
-    echo "    vi $out_dir/*.diff "
-fi
 
 # Write it out to a csv file
 echo "$student_name,$compile_score,$run_score,$output_score,$content_score,$comment_score" >> "$scores_csv"

@@ -203,7 +203,7 @@ do
     if [ $print_output -eq 1 ]; then
         cat "$out_file"
     elif [ $rv -eq 0 ]; then
-        (tail -n 1 "$scores_csv" | awk -F',' '{ print "    Compile:", $2, "Run:", $3, "Output:", $4, "Comments:", $5 }')
+        tail -n 11 "$out_file"
     fi
 
     if [ $rv -ne 0 ]; then
@@ -212,9 +212,5 @@ do
     echo
 done
 
-echo "Scores:"
-echo "-------------------------------------------------------------------------"
-cat "$scores_csv"
-echo "-------------------------------------------------------------------------"
 echo "All done!"
 exit 0
