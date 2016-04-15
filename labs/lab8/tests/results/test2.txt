@@ -1,0 +1,2 @@
+Number of students: 0
+Number of grades (each): 0

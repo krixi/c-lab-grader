@@ -1,0 +1,10 @@
+Number of students: 4
+Number of grades (each): 5
+ID: 111, Name: Jess Bagley, GPA: 91.28
+Grades: 90.5 96.7 89.0 96.0 84.2
+ID: 187, Name: Ryder Reynolds, GPA: 85.52
+Grades: 85.3 88.1 82.3 92.8 79.1
+ID: 242, Name: Mckenzie Winslow, GPA: 83.28
+Grades: 75.3 82.3 88.1 92.4 78.3
+ID: 616, Name: Cory Traves, GPA: 70.02
+Grades: 67.2 70.3 45.3 90.1 77.2

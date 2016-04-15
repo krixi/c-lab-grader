@@ -1,0 +1,6 @@
+Number of students: 2
+Number of grades (each): 3
+ID: 10, Name: Becky Lincon, GPA: 89.83
+Grades: 93.4 89.2 86.9
+ID: 3, Name: Alfred Stephenson, GPA: 87.03
+Grades: 89.7 85.3 86.1
