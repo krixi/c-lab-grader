@@ -1,0 +1,35 @@
+---------------
+| 3	6.9410
+| Li	Lithium
+| solid
+| metallic
+| Found: 1817
+---------------
+---------------
+| 86	222.0000
+| Rn	Radon
+| gas
+| atomic
+| Found: 1900
+---------------
+---------------
+| 19	39.0983
+| K	Potassium
+| solid
+| metallic
+| Found: 1807
+---------------
+---------------
+| 80	200.5900
+| Hg	Mercury
+| liquid
+| metallic
+| Found: Ancient
+---------------
+---------------
+| 13	26.9815
+| Al	Aluminum
+| solid
+| metallic
+| Found: Ancient
+---------------

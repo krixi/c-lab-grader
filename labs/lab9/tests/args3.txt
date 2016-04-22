@@ -1,0 +1,2 @@
+myoutput.txt Li Rn K Hg Al
+myoutput.txt
