@@ -9,7 +9,7 @@ CC=gcc
 CFLAGS="-Wall -std=c99"
 tests_dir="tests"
 comment_weight=6.0
-create_tests=1
+create_tests=0
 check_for_content=0
 other_files="element_db.csv"
 
