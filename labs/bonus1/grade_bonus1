@@ -190,7 +190,7 @@ do
                     #cat "$assignment.out" | pcregrep -M "${line}"
                     grep_rv=$(cat "$assignment.out" | pcregrep -M "${line}" | wc -l)
                 else
-                    grep_rv=$(cat "$assignment.out" | grep "${line}" | wc -l)
+                    grep_rv=$(cat "$assignment.out" | grep -i "${line}" | wc -l)
                 fi
                 #echo "grep_rv = $grep_rv"
                 ((grep_lines++))
