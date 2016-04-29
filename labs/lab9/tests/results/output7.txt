@@ -1,0 +1,85 @@
+---------------
+| 3	6.9410
+| Li	Lithium
+| solid
+| metallic
+| Found: 1817
+---------------
+---------------
+| 11	22.9898
+| Na	Sodium
+| solid
+| metallic
+| Found: 1807
+---------------
+---------------
+| 19	39.0983
+| K	Potassium
+| solid
+| metallic
+| Found: 1807
+---------------
+---------------
+| 37	85.4678
+| Rb	Rubidium
+| solid
+| metallic
+| Found: 1861
+---------------
+---------------
+| 55	132.9055
+| Cs	Cesium
+| solid
+| metallic
+| Found: 1860
+---------------
+---------------
+| 87	223.0000
+| Fr	Francium
+| solid
+| metallic
+| Found: 1939
+---------------
+---------------
+| 4	9.0122
+| Be	Beryllium
+| solid
+| metallic
+| Found: 1798
+---------------
+---------------
+| 12	24.3050
+| Mg	Magnesium
+| solid
+| metallic
+| Found: 1808
+---------------
+---------------
+| 20	40.0780
+| Ca	Calcium
+| solid
+| metallic
+| Found: Ancient
+---------------
+---------------
+| 38	87.6200
+| Sr	Strontium
+| solid
+| metallic
+| Found: 1790
+---------------
+---------------
+| 56	137.3270
+| Ba	Barium
+| solid
+| metallic
+| Found: 1808
+---------------
+---------------
+| 88	226.0000
+| Ra	Radium
+| solid
+| metallic
+| Found: 1898
+---------------
+WARNING: No such element: aline.txt

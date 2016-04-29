@@ -1,0 +1,2 @@
+noble_gases.txt He Ne Ar Kr Xe Rn Uuo
+noble_gases.txt
